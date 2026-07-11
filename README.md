@@ -1,16 +1,59 @@
-# React + Vite
+# Knowledge Inbox — Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+React UI for the AI Knowledge Inbox. Save notes and URLs, view saved items, ask
+questions, and read the generated answer with its cited source snippets.
 
-Currently, two official plugins are available:
+Pairs with the FastAPI backend (see `Knowledge-Backend`).
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Stack
 
-## React Compiler
+- **React 19** + **Vite 8**
+- Plain React hooks for state (no state library)
+- **Oxlint** for linting
+- CSS (no UI framework) — clarity over visual polish
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Setup
 
-## Expanding the Oxlint configuration
+```bash
+cd frontend
+npm install
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+cp .env.example .env            # set VITE_API_BASE_URL if backend isn't on :8000
+npm run dev
+```
+
+Dev server: `http://localhost:5173`. Backend must be running.
+
+### Environment
+
+| Var | Default | Purpose |
+|-----|---------|---------|
+| `VITE_API_BASE_URL` | `http://127.0.0.1:8000` | backend API base URL |
+
+## What it does
+
+- **Add** a note or a URL (`AddItemForm`) → `POST /ingest`
+- **List** saved items (`ItemList`, `useItems`) → `GET /items`
+- **Ask** a question (`AskPanel`, `useAskQuery`) → `POST /query`
+- **Answer** view (`AnswerView`) shows the answer plus source snippets with scores
+- **Toast** for success/error feedback
+
+## Layout
+
+```
+src/
+  api/client.js       thin fetch wrapper around the backend
+  hooks/              useItems, useItemContent, useAskQuery
+  components/         AddItemForm, ItemList, AskPanel, AnswerView, Toast
+  App.jsx             composes the panels
+  main.jsx            entry
+```
+
+## Scripts
+
+```bash
+npm run dev       # dev server + HMR
+npm run build     # production build → dist/
+npm run preview   # preview the build
+npm run lint      # oxlint
+```
